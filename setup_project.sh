@@ -141,25 +141,10 @@ if [ "$choice" = "y" ]; then
         fi
     done
 
-    python3 - "$WORKSPACE/Helpers/config.json" "$WARNING" "$FAILURE" << 'EOF'
-import json
-import sys
+    sed -i "s/\"warning\": [0-9]*,/\"warning\": ${WARNING},/" "$WORKSPACE/Helpers/config.json"
+    sed -i "s/\"failure\": [0-9]*/\"failure\": ${FAILURE}/" "$WORKSPACE/Helpers/config.json"
 
-config_file = sys.argv[1]
-warning = int(sys.argv[2])
-failure = int(sys.argv[3])
-
-with open(config_file, "r") as f:
-    config = json.load(f)
-
-config["thresholds"]["warning"] = warning
-config["thresholds"]["failure"] = failure
-
-with open(config_file, "w") as f:
-    json.dump(config, f, indent=4)
-
-print("Thresholds updated successfully.")
-EOF
+    echo "Thresholds updated successfully."
 fi
 
 echo ""
